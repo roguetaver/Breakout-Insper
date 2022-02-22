@@ -11,16 +11,21 @@ public class GameManager : MonoBehaviour
     public GameObject ballPrefab;
     public GameObject paddle;
     public bool launch;
-    public float ballSpeed = 10f;
+    public float ballSpeed = 8f;
     public Vector2 force;
     public Text ballsLifeText;
     public GameObject bailTrail;
     public GameObject leftLine;
     public GameObject rightLine;
+    public GameObject victoryText;
+    public GameObject defeatText;
+    public bool clearLevel;
 
 
     void Start()
     {
+        victoryText.SetActive(false);
+        defeatText.SetActive(false);
         ball = GameObject.Find("ball");
         paddle = GameObject.Find("paddle");
         ballsLifeText.text = ballsLife.ToString();
@@ -30,13 +35,20 @@ public class GameManager : MonoBehaviour
         rightLine = ball.transform.GetChild(2).gameObject;
         rightLine.SetActive(false);
         leftLine.SetActive(true);
+        clearLevel = false;
         resetPaddleAndBall();
-
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+
+        if(GameObject.FindGameObjectsWithTag("Brick").Length == 0){
+            victoryText.SetActive(true);
+            clearLevel = true;
+            StartCoroutine(loadNextLevel());
+        }
+
         if(ball.GetComponent<ball_movement>().outHit){
             ballsLife --;
             ballsLifeText.text = ballsLife.ToString();
@@ -45,7 +57,8 @@ public class GameManager : MonoBehaviour
             launch = false;
         }
 
-        if(ballsLife <= 0){
+        if(ballsLife <= 0 && !clearLevel){
+            defeatText.SetActive(true);
             StartCoroutine(reloadLevel());
         }
 
@@ -74,8 +87,13 @@ public class GameManager : MonoBehaviour
     }
 
     IEnumerator reloadLevel(){
-        yield return new WaitForSeconds(2); 
+        yield return new WaitForSeconds(3); 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    IEnumerator loadNextLevel(){
+        yield return new WaitForSeconds(3); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void resetPaddleAndBall(){

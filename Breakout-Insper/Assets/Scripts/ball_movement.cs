@@ -12,6 +12,7 @@ public class ball_movement : MonoBehaviour
     public CinemachineVirtualCamera vcam;
     private CinemachineBasicMultiChannelPerlin noise;
     private float shakeTimer;
+    AudioSource audioData;
 
     void Start()
     {
@@ -25,12 +26,12 @@ public class ball_movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         rb.velocity = rb.velocity.normalized * speed;
 
         if(shakeTimer > 0f){
-            shakeTimer -= Time.deltaTime;
+            shakeTimer -= Time.fixedDeltaTime;
         }
         if(shakeTimer <= 0f){
             noise.m_AmplitudeGain = 0f;
@@ -42,8 +43,10 @@ public class ball_movement : MonoBehaviour
             outHit = true;
         }
 
-        if(collision.gameObject.transform.tag == "Brick"){
+        if(collision.gameObject.transform.tag == "Brick" || collision.gameObject.transform.tag == "InvincibleBrick"){
             shakeCamera(0.5f,0.1f);
+            audioData = GetComponent<AudioSource>();
+            audioData.Play(0);
         }
     }
 

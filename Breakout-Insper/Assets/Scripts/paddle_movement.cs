@@ -5,9 +5,9 @@ using UnityEngine;
 public class paddle_movement : MonoBehaviour
 {
     public Rigidbody2D rb;
-    private float speed = 18f;
+    private float speed = 35f;
     public Vector2 direction;
-    public float maxBounceAngle = 30f;
+    public float maxBounceAngle = 55f;
 
     void Start()
     {
@@ -15,7 +15,7 @@ public class paddle_movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
             direction = Vector2.left;

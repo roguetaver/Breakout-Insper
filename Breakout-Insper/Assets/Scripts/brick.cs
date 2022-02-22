@@ -10,6 +10,8 @@ public class brick : MonoBehaviour
     public GameObject particles;
     public Sprite[] spritesArray;
     public SpriteRenderer spriteRenderer;
+    private GameObject lightComponent;
+    public GameObject lightPrefab;
 
     void Start()
     {
@@ -18,17 +20,21 @@ public class brick : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
     }
 
     private void Hit(){
+
+        Instantiate(lightPrefab,this.transform.position,Quaternion.identity);    
         if(!invincible){
             if(health > 1){
                 spriteRenderer.sprite = spritesArray[0];
             }
-            Instantiate(particles,this.transform.position,Quaternion.identity);            
+            Instantiate(particles,this.transform.position,Quaternion.identity);
+                    
+
             health --;
         }
 
